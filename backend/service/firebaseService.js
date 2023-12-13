@@ -20,11 +20,16 @@ const refreshToken = () => {
     return auth.currentUser.getIdTokenResult(true);
 };
 
+const getCurrentUser = () => {
+    return auth.currentUser;
+};
+
 const FirebaseService = {
     register,
     signIn,
     signOut,
     refreshToken,
+    getCurrentUser,
 };
 
 export default FirebaseService;

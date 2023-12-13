@@ -27,6 +27,9 @@ export const authenticate = (req, _, next) => {
             if (result.token !== authorizationToken) {
                 throwForbiddenError();
             }
+
+            req.user = auth.currentUser;
+
             return next();
         })
         .catch(() => {

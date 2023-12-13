@@ -1,5 +1,6 @@
 import { throwInvalidArgumentError } from '../util/errorUtil.js';
 import User from '../model/user.js';
+import FirebaseService from './expenseService.js';
 
 const createUser = user => {
     if (!user) {
@@ -31,9 +32,14 @@ const getUser = (username, email) => {
     return User.findOne(options);
 };
 
+const getCurrentUser = () => {
+    return FirebaseService.getCurrentUser();
+};
+
 const UserService = {
     createUser,
     getUser,
+    getCurrentUser,
 };
 
 export default UserService;
