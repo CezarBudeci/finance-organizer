@@ -27,7 +27,7 @@ profileRouter.get('/:id', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    ProfileService.getProfile(id)
+    ProfileService.getProfile(id, _, req.user)
         .then(result => {
             res.json(result);
             return;
@@ -81,7 +81,8 @@ profileRouter.put('/:id', (req, res) => {
         profile.name,
         profile.description,
         profile.currency,
-        profile.expenses[0]
+        profile.expenses[0],
+        req.user
     )
         .then(result => {
             res.json(result);
@@ -99,7 +100,7 @@ profileRouter.delete('/:id', (req, res) => {
     if (!req.user) {
         throwInvalidArgumentError('Invalid user');
     }
-
+    // TODO: add check for user
     ProfileService.deleteProfile(id)
         .then(() => {
             res.sendStatus(204);

@@ -1,4 +1,4 @@
-import './environmet.js';
+import './environment.js';
 import app from './firebase/firebaseApp.js';
 import http from 'http';
 import expressServer from './expressServer.js';

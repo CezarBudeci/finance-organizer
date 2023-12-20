@@ -1,4 +1,5 @@
 import auth from '../firebase/firebaseAuth.js';
+import UserService from '../service/userService.js';
 import {
     throwForbiddenError,
     throwInternalServerError,
@@ -28,8 +29,12 @@ export const authenticate = (req, _, next) => {
                 throwForbiddenError();
             }
 
-            req.user = auth.currentUser;
+            const currentUser = auth.currentUser;
 
+            return UserService.getUser(currentUser);
+        })
+        .then(user => {
+            req.user = user;
             return next();
         })
         .catch(() => {

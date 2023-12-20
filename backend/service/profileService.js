@@ -35,20 +35,37 @@ const addProfile = profile => {
     });
 };
 
-const getProfile = (id, name) => {
-    if (!id || !name) {
+const getProfile = (id, name, user) => {
+    if (!id && !name) {
         throwInvalidArgumentError(errorMessage);
     }
 
+    if (!user) {
+        throwInvalidArgumentError(errorMessage);
+    }
+
+    let options = {
+        user,
+    };
+
     if (id) {
-        return Profile.findById(id);
+        options._id = id;
     }
 
     if (name) {
-        return Profile.find({ name });
+        options.name = name;
     }
 
-    throwInvalidArgumentError(errorMessage);
+    return Profile.find(options)
+        .populate('user', { email: e })
+        .populate('balance', { amount: 1 })
+        .populate('expenses', {
+            amount: 1,
+            type: 1,
+            category: 1,
+            description: 1,
+            date: 1,
+        });
 };
 
 const getProfiles = user => {
@@ -56,10 +73,19 @@ const getProfiles = user => {
         throwInvalidArgumentError(errorMessage);
     }
 
-    return Profile.find({ user: { _id: user._id } });
+    return Profile.find({ user: { _id: user._id } })
+        .populate('user', { email: e })
+        .populate('balance', { amount: 1 })
+        .populate('expenses', {
+            amount: 1,
+            type: 1,
+            category: 1,
+            description: 1,
+            date: 1,
+        });
 };
 
-const editProfile = (id, name, description, currency, expense) => {
+const editProfile = (id, name, description, currency, expense, user) => {
     if (!id) {
         throwInvalidArgumentError(errorMessage);
     }
@@ -67,7 +93,7 @@ const editProfile = (id, name, description, currency, expense) => {
     if (!name && !description && !currency && !expense) {
         throwInvalidArgumentError(errorMessage);
     }
-
+    // TODO: add check for user
     return Profile.findById(id).then(result => {
         const existingProfile = result;
         if (name) {
@@ -86,7 +112,16 @@ const editProfile = (id, name, description, currency, expense) => {
             existingProfile.expenses.push(expense);
         }
 
-        return Profile.findByIdAndUpdate(id, existingProfile, { new: true });
+        return Profile.findByIdAndUpdate(id, existingProfile, { new: true })
+            .populate('user', { email: e })
+            .populate('balance', { amount: 1 })
+            .populate('expenses', {
+                amount: 1,
+                type: 1,
+                category: 1,
+                description: 1,
+                date: 1,
+            });
     });
 };
 
