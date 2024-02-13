@@ -22,15 +22,13 @@ export const throwInternalServerError = message => {
 };
 
 export const getError = (type, message) => {
-    const error = new Error();
+    let error = new Error();
     error.name = type;
     error.message = message;
     return error;
 };
 
 const throwError = (type, message) => {
-    const error = new Error();
-    error.name = type;
-    error.message = message;
+    const error = getError(type, message);
     throw error;
 };

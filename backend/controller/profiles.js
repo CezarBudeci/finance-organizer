@@ -9,12 +9,11 @@ profileRouter.get('/', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    ProfileService.getProfiles(req.user)
-        .then(result => {
-            res.json(result);
-            return;
-        })
-        .catch(err => next(err));
+    ProfileService.getProfiles(req.user).then(result => {
+        res.json(result);
+        return;
+    });
+    // .catch(err => next(err));
 });
 
 profileRouter.get('/:id', (req, res) => {
@@ -35,7 +34,7 @@ profileRouter.get('/:id', (req, res) => {
         .catch(err => next(err));
 });
 
-profileRouter.post('/', (req, res) => {
+profileRouter.post('/', (req, res, next) => {
     if (!req.user) {
         throwInvalidArgumentError('Invalid user');
     }
@@ -100,8 +99,8 @@ profileRouter.delete('/:id', (req, res) => {
     if (!req.user) {
         throwInvalidArgumentError('Invalid user');
     }
-    // TODO: add check for user
-    ProfileService.deleteProfile(id)
+
+    ProfileService.deleteProfile(id, req.user)
         .then(() => {
             res.sendStatus(204);
             return;

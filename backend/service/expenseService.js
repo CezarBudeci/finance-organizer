@@ -1,13 +1,12 @@
 import Expense from '../model/expense.js';
-import BalanceService from './balanceService.js';
 import CategoryService from './categoryService.js';
 import ProfileService from './profileService.js';
 
 const errorMessage = 'Invalid expense data';
 
 const types = {
-    income: 'income',
-    expense: 'expense',
+    INCOME: 'INCOME',
+    EXPENSE: 'EXPENSE',
 };
 
 const addExpense = (amount, category, description, date, profileId) => {
@@ -21,10 +20,10 @@ const addExpense = (amount, category, description, date, profileId) => {
 
     amount = Number(amount);
 
-    let type = types.income;
+    let type = types.INCOME;
     if (amount < 0) {
         amount *= -1;
-        type = types.expense;
+        type = types.EXPENSE;
     }
 
     return ProfileService.getProfile(profileId).then(existingProfile => {
@@ -41,12 +40,7 @@ const addExpense = (amount, category, description, date, profileId) => {
 
                 return expense.save().then(storedExpense => {
                     existingProfile.expenses.push(storedExpense);
-                    return existingProfile
-                        .save()
-                        .then(storedProfile => {
-                            return BalanceService.getBalance(storedProfile._id);
-                        })
-                        .then(() => storedExpense);
+                    return existingProfile.save().then(() => storedExpense);
                 });
             }
         );
@@ -72,10 +66,10 @@ const editExpense = (id, amount, category, description, date) => {
 
     amount = Number(amount);
 
-    let type = types.income;
+    let type = types.INCOME;
     if (amount < 0) {
         amount *= -1;
-        type = types.expense;
+        type = types.EXPENSE;
     }
 
     return Expense.findById(id).then(result => {

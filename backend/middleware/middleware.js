@@ -31,13 +31,14 @@ export const authenticate = (req, _, next) => {
 
             const currentUser = auth.currentUser;
 
-            return UserService.getUser(currentUser);
+            return UserService.getUser(currentUser.username, currentUser.email);
         })
         .then(user => {
             req.user = user;
-            return next();
+            next();
         })
-        .catch(() => {
+        .catch(error => {
+            console.log(error);
             throwInternalServerError();
         });
 };

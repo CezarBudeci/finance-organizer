@@ -1,35 +1,37 @@
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import LoginForm from './components/LoginForm';
 import './styles/main.css';
 import RegistrationForm from './components/RegistrationForm';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { resetUser } from './reducers/userReducer';
 import InfoAlert from './components/InfoAlert';
-
+import Profiles from './components/Profiles';
+import Profile from './components/Profile';
+import PrivateRoute from './components/PrivateRoute';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 function App() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const user = useSelector(state => state.user);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (window.location.href.indexOf('register') > -1) {
-            return;
+        if (user.isAuthorized) {
+            navigate('/profiles');
         }
-        if (!user.token || !user.username || !user.email) {
-            dispatch(resetUser());
-            navigate('/');
-        }
-    }, [user.token, user.username, user.email]);
+    }, [user.isAuthorized]);
 
     return (
         <div className="app">
             <Header />
             <InfoAlert />
             <Routes>
-                <Route path="/" element={<LoginForm />} />
-                <Route path="/register" element={<RegistrationForm />} />
+                <Route exec path="/" element={<LoginForm />} />
+                <Route exec path="/register" element={<RegistrationForm />} />
+                <Route exec path="/profiles" element={<PrivateRoute />}>
+                    <Route exec path="/profiles" element={<Profiles />} />
+                </Route>
+                <Route exec path="/profiles/:id" element={<PrivateRoute />}>
+                    <Route exec path="/profiles/:id" element={<Profile />} />
+                </Route>
             </Routes>
         </div>
     );

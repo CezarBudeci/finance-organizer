@@ -17,6 +17,10 @@ const profileSchema = new mongoose.Schema({
         maxLength: 3,
         required: true,
     },
+    balance: {
+        type: Number,
+        required: true,
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -28,11 +32,6 @@ const profileSchema = new mongoose.Schema({
             ref: 'Expense',
         },
     ],
-    balance: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Balance',
-        required: true,
-    },
 });
 
 profileSchema.set('toJSON', {

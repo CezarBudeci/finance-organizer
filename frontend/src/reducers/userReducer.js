@@ -9,6 +9,7 @@ const initialState = {
     username: '',
     email: '',
     token: '',
+    isAuthorized: false,
 };
 
 const userSlice = createSlice({
@@ -16,13 +17,21 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser(_, action) {
-            return action.payload;
+            const payload = action.payload;
+
+            return {
+                username: payload.username,
+                email: payload.email,
+                token: payload.token,
+                isAuthorized: true,
+            };
         },
         setToken(state, action) {
             return {
                 username: state.username,
                 email: state.email,
                 token: action.payload.token,
+                isAuthorized: true,
             };
         },
         resetUser() {
@@ -43,7 +52,7 @@ export const login = (email, password) => {
             .catch(err => {
                 dispatch(resetUser());
                 AuthenticationService.setToken(null);
-                console.log(err);
+
                 if (err.name === 'AxiosError') {
                     dispatch(createAlert(err.response.data.error, ERROR, 3));
                 } else {
