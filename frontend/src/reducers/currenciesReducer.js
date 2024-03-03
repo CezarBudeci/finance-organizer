@@ -4,6 +4,7 @@ import AuthenticationService from '../services/authenticationService';
 import { resetUser } from './userReducer';
 import { createAlert } from './alertReducer';
 import { ERROR } from '../utils/constants';
+import { addCurrency } from './profilesReducer';
 
 const initialState = [];
 
@@ -50,18 +51,16 @@ export const initializeCurrencies = () => {
     };
 };
 
-export const getCurrency = key => {
+export const populateProfileCurrency = (key, profileId) => {
     return dispatch => {
         return CurrencyService.getCurrency(key)
             .then(data => {
-                console.log(data);
                 data.label = data.name;
                 delete data.name;
 
-                dispatch(setCurrencies([data]));
+                dispatch(addCurrency({ id: profileId, currency: data }));
             })
             .catch(err => {
-                console.log(err);
                 if (err.response) {
                     if (err.response.status === 401) {
                         dispatch(resetUser());

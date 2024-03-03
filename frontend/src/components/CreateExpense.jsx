@@ -8,9 +8,11 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeCurrencies } from '../reducers/currenciesReducer';
-import { validateTextInput } from '../utils/inputUtils';
-import { addProfile } from '../reducers/profilesReducer';
+import { initializeCategories } from '../reducers/categoriesReducer';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { addExpense } from '../reducers/profilesReducer';
+import { validateNumberInput } from '../utils/inputUtils';
 import { createAlert } from '../reducers/alertReducer';
 import { ERROR } from '../utils/constants';
 
@@ -26,28 +28,34 @@ const style = {
     p: 4,
 };
 
-const CreateProfile = ({ isOpen, toggleModal }) => {
+const CreateExpense = ({ profileId, isOpen, toggleModal }) => {
     const dispatch = useDispatch();
-    const currencies = useSelector(state => state.currencies);
+    const categories = useSelector(state => state.categories);
 
     const handleSubmit = e => {
         e.preventDefault();
 
-        const name = validateTextInput(dispatch, e.target.name.value);
-        const description = validateTextInput(
-            dispatch,
-            e.target.description.value
-        );
-        const currency = validateTextInput(dispatch, e.target.currency.value);
+        const amount = validateNumberInput(dispatch, e.target.amount.value);
 
-        const currencyObjects = Object.values(currencies).filter(
-            value => value.label === currency
-        );
-        const currencyCode =
-            currencyObjects.length > 0 ? currencyObjects[0].code : undefined;
+        const category = e.target.category.value;
 
-        if (name && currencyCode) {
-            dispatch(addProfile({ name, description, currency: currencyCode }));
+        let description = null;
+
+        if (e.target.description.value) {
+            description = e.target.description.value.trim();
+        }
+
+        const date = e.target.date.value;
+
+        if (amount && category && date) {
+            const newExpense = {
+                amount,
+                category,
+                date,
+                description: description ? description : null,
+            };
+
+            dispatch(addExpense(profileId, newExpense));
             toggleModal();
         } else {
             dispatch(createAlert('Check your inputs', ERROR, 3));
@@ -56,7 +64,9 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
 
     useEffect(() => {
         if (isOpen) {
-            dispatch(initializeCurrencies());
+            if (!categories || categories.length === 0) {
+                dispatch(initializeCategories());
+            }
         }
     }, [isOpen]);
 
@@ -65,18 +75,40 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
             <Modal open={isOpen} onClose={toggleModal}>
                 <Box sx={style}>
                     <Typography variant="h4" component="h3">
-                        New profile
+                        New expense
                     </Typography>
                     <form onSubmit={handleSubmit}>
                         <div>
                             <div>
                                 <TextField
-                                    label="Name"
+                                    label="Amount"
                                     variant="standard"
                                     color="secondary"
-                                    name="name"
-                                    type="text"
+                                    name="amount"
+                                    type="number"
                                     required
+                                />
+                            </div>
+                            <div>
+                                <Autocomplete
+                                    disablePortal
+                                    options={categories}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            label="Category *"
+                                            variant="standard"
+                                            name="category"
+                                        />
+                                    )}
+                                    getOptionLabel={option => option}
+                                    renderOption={(props, option) => (
+                                        <Typography
+                                            variant="standard"
+                                            {...props}>
+                                            {option}
+                                        </Typography>
+                                    )}
                                 />
                             </div>
                             <div>
@@ -84,29 +116,18 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
                                     label="Description"
                                     variant="standard"
                                     color="secondary"
-                                    type="text"
+                                    type="description"
                                     name="description"
                                 />
                             </div>
                             <div>
-                                <Autocomplete
-                                    disablePortal
-                                    options={currencies}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            label="Currency *"
-                                            variant="standard"
-                                            name="currency"
-                                        />
-                                    )}
-                                    renderOption={(props, option) => (
-                                        <Typography {...props}>
-                                            {option.symbol} ({option.label})
-                                        </Typography>
-                                    )}
+                                <DatePicker
+                                    name="date"
+                                    label="Date *"
+                                    defaultValue={dayjs(new Date())}
                                 />
                             </div>
+
                             <div>
                                 <div>
                                     <Button
@@ -133,4 +154,4 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
     );
 };
 
-export default CreateProfile;
+export default CreateExpense;

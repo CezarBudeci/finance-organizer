@@ -4,10 +4,34 @@ import { ERROR } from '../utils/constants';
 import { resetUser } from './userReducer';
 import AuthenticationService from '../services/authenticationService';
 import { createAlert } from './alertReducer';
+import { populateProfileCurrency } from './currenciesReducer';
 
 const initialState = [];
 
+const sortExpenses = expenses => {
+    expenses.forEach(
+        expense => (expense.date = new Date(expense.date).getTime())
+    );
+    return expenses.sort((a, b) => {
+        if (a.date > b.date) {
+            return -1;
+        }
+
+        if (a.date < b.date) {
+            return 1;
+        }
+
+        return 0;
+    });
+};
+
 const sortProfiles = profiles => {
+    profiles.forEach(profile => {
+        if (profile.expenses) {
+            profile.expenses = sortExpenses(profile.expenses);
+        }
+    });
+
     return profiles.sort((a, b) => {
         if (a.balance > b.balance) {
             return -1;
@@ -34,7 +58,7 @@ const profilesSlice = createSlice({
             let payload = action.payload;
             let stateCopy = [...state];
             stateCopy.push(payload);
-            return stateCopy;
+            return sortProfiles(stateCopy);
         },
         updateProfile(state, action) {
             const payload = action.payload;
@@ -51,9 +75,30 @@ const profilesSlice = createSlice({
                 expenses: payload.expenses
                     ? payload.expenses
                     : profileToUpdate.expenses,
-                balance: payload.balance
-                    ? payload.balance
-                    : profileToUpdate.balance,
+                balance:
+                    payload.balance !== null &&
+                    typeof payload.balance === 'number'
+                        ? payload.balance
+                        : profileToUpdate.balance,
+            };
+
+            let updatedState = state.map(profile =>
+                profile.id === payload.id ? updatedProfile : profile
+            );
+
+            return sortProfiles(updatedState);
+        },
+        addCurrency(state, action) {
+            const payload = action.payload;
+            const profileToUpdate = state.find(
+                profile => profile.id === payload.id
+            );
+
+            const updatedProfile = {
+                ...profileToUpdate,
+                currency: payload.currency
+                    ? payload.currency
+                    : profileToUpdate.currency,
             };
 
             let updatedState = state.map(profile =>
@@ -68,7 +113,7 @@ const profilesSlice = createSlice({
                 profile => profile.id === action.payload.id
             );
             stateCopy.splice(index, 1);
-            return stateCopy;
+            return sortProfiles(stateCopy);
         },
         resetProfiles() {
             return initialState;
@@ -80,6 +125,7 @@ export const {
     setProfiles,
     addProfileAction,
     updateProfile,
+    addCurrency,
     deleteProfile,
     resetProfiles,
 } = profilesSlice.actions;
@@ -138,6 +184,76 @@ export const editProfile = profile => {
         return ProfileService.editProfile(profile)
             .then(data => {
                 dispatch(updateProfile(data));
+                dispatch(populateProfileCurrency(data.currency, data.id));
+            })
+            .catch(err => {
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        dispatch(resetUser());
+                        AuthenticationService.setToken(null);
+                    }
+                }
+
+                if (err.name === 'AxiosError') {
+                    dispatch(createAlert(err.response.data.error, ERROR, 3));
+                } else {
+                    dispatch(createAlert(err.message, ERROR, 3));
+                }
+            });
+    };
+};
+
+export const addExpense = (profileId, expense) => {
+    return dispatch => {
+        return ProfileService.addExpense(profileId, expense)
+            .then(data => {
+                dispatch(updateProfile(data));
+            })
+            .catch(err => {
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        dispatch(resetUser());
+                        AuthenticationService.setToken(null);
+                    }
+                }
+
+                if (err.name === 'AxiosError') {
+                    dispatch(createAlert(err.response.data.error, ERROR, 3));
+                } else {
+                    dispatch(createAlert(err.message, ERROR, 3));
+                }
+            });
+    };
+};
+
+export const editExpense = (profileId, expense) => {
+    return dispatch => {
+        return ProfileService.editExpense(profileId, expense)
+            .then(data => {
+                dispatch(updateProfile(data));
+            })
+            .catch(err => {
+                if (err.response) {
+                    if (err.response.status === 401) {
+                        dispatch(resetUser());
+                        AuthenticationService.setToken(null);
+                    }
+                }
+
+                if (err.name === 'AxiosError') {
+                    dispatch(createAlert(err.response.data.error, ERROR, 3));
+                } else {
+                    dispatch(createAlert(err.message, ERROR, 3));
+                }
+            });
+    };
+};
+
+export const removeExpense = (profileId, expenseId) => {
+    return dispatch => {
+        return ProfileService.deleteExpense(profileId, expenseId)
+            .then(res => {
+                dispatch(updateProfile(res));
             })
             .catch(err => {
                 if (err.response) {
@@ -178,7 +294,5 @@ export const removeProfile = id => {
             });
     };
 };
-
-// TODO: add expense handling
 
 export default profilesSlice.reducer;

@@ -52,11 +52,10 @@ const getProfile = (id, name, user) => {
         options.name = name;
     }
 
-    return Profile.find(options)
+    return Profile.findOne(options)
         .populate('user', { email: 1 })
         .populate('expenses', {
             amount: 1,
-            type: 1,
             category: 1,
             description: 1,
             date: 1,
@@ -72,7 +71,6 @@ const getProfiles = user => {
         .populate('user', { email: 1 })
         .populate('expenses', {
             amount: 1,
-            type: 1,
             category: 1,
             description: 1,
             date: 1,
@@ -80,64 +78,31 @@ const getProfiles = user => {
 };
 
 const editProfile = (id, name, description, currency, user) => {
-    if (!id || !user) {
+    if (!id && !user) {
         throwInvalidArgumentError(errorMessage);
     }
 
-    if (!name && !description && !currency) {
+    if (!name && !currency) {
         throwInvalidArgumentError(errorMessage);
     }
 
-    let options = {};
+    return getProfile(id, undefined, user)
+        .then(result => {
+            if (name) {
+                result.name = name;
+            }
 
-    if (id) {
-        options._id = id;
-    }
+            if (description) {
+                result.description = description;
+            }
 
-    if (user) {
-        options.user = user;
-    }
+            if (currency) {
+                result.currency = currency;
+            }
 
-    return Profile.find(options).then(result => {
-        const existingProfile = result;
-        if (name) {
-            existingProfile.name = name;
-        }
-
-        if (description) {
-            existingProfile.description = description;
-        }
-
-        if (currency) {
-            existingProfile.currency = currency;
-        }
-
-        return Profile.findByIdAndUpdate(id, existingProfile, { new: true })
-            .populate('user', { email: e })
-            .populate('expenses', {
-                amount: 1,
-                type: 1,
-                category: 1,
-                description: 1,
-                date: 1,
-            });
-    });
-};
-
-const addExpense = (id, expense, user) => {
-    if (!id) {
-        throwInvalidArgumentError(errorMessage);
-    }
-
-    if (!expense) {
-        throwInvalidArgumentError(errorMessage);
-    }
-
-    if (!user) {
-        throwInvalidArgumentError(errorMessage);
-    }
-
-    return editProfile(id, _, _, _, expense, user);
+            return result.save();
+        })
+        .then(() => getProfile(id, undefined, user));
 };
 
 const deleteProfile = (id, user) => {
@@ -157,18 +122,19 @@ const deleteProfile = (id, user) => {
 
     let expensesIds = [];
 
-    return Profile.find(options)
+    return Profile.findOne(options)
         .then(result => {
             if (result) {
                 result.expenses.forEach(expense =>
                     expensesIds.push(expense._id)
                 );
-                balanceId = result.balance._id;
             }
 
             return ExpenseService.deleteExpenses(expensesIds);
         })
-        .then(() => {});
+        .then(() => {
+            return Profile.findByIdAndDelete(id);
+        });
 };
 
 const ProfileService = {
@@ -176,7 +142,6 @@ const ProfileService = {
     getProfile,
     getProfiles,
     editProfile,
-    addExpense,
     deleteProfile,
 };
 

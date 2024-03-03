@@ -1,5 +1,5 @@
 import express from 'express';
-import CategoryService from '../service/categoryService.js';
+import { categories } from '../data/categories.js';
 
 const categoryRouter = express.Router();
 
@@ -8,30 +8,8 @@ categoryRouter.get('/', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    CategoryService.getCategories()
-        .then(result => {
-            res.json(result);
-            return;
-        })
-        .catch(err => next(err));
-});
-
-categoryRouter.get('/:id', (req, res) => {
-    const id = req.params.id;
-    if (!id) {
-        throwInvalidArgumentError('Invalid id');
-    }
-
-    if (!req.user) {
-        throwInvalidArgumentError('Invalid user');
-    }
-
-    CategoryService.getCategory(id, req.body.name ?? undefined)
-        .then(result => {
-            res.json(result);
-            return;
-        })
-        .catch(err => next(err));
+    res.json(categories);
+    return;
 });
 
 export default categoryRouter;

@@ -3,14 +3,16 @@ import ProfileListComponent from './ProfileListComponent';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { IconButton } from '@mui/material';
 import CreateProfile from './CreateProfile';
-import { toggleAddProfileModalIsOpen } from '../reducers/modals';
+import { toggleAddProfileModalIsOpen } from '../reducers/modalsReducer';
 import { useEffect } from 'react';
 import { initializeProfiles } from '../reducers/profilesReducer';
 
 const Profiles = () => {
     const dispatch = useDispatch();
     const profiles = useSelector(state => state.profiles);
-    const addProfileModal = useSelector(state => state.modals.addProfileModal);
+    const addProfileModalIsOpen = useSelector(
+        state => state.modals.addProfileModalIsOpen
+    );
 
     const toggleModal = () => {
         dispatch(toggleAddProfileModalIsOpen());
@@ -25,7 +27,7 @@ const Profiles = () => {
                 <AddCircleOutlineIcon />
             </IconButton>
             <CreateProfile
-                isOpen={addProfileModal.isOpen}
+                isOpen={addProfileModalIsOpen}
                 toggleModal={toggleModal}
             />
             {profiles &&

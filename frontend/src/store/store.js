@@ -4,7 +4,8 @@ import alertReducer from '../reducers/alertReducer';
 import mainMenuReducer from '../reducers/mainMenuReducer';
 import profileReducer from '../reducers/profilesReducer';
 import currenciesReducer from '../reducers/currenciesReducer';
-import modals from '../reducers/modals';
+import modals from '../reducers/modalsReducer';
+import categoriesReducer from '../reducers/categoriesReducer';
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         profiles: profileReducer,
         modals: modals,
         currencies: currenciesReducer,
+        categories: categoriesReducer,
     },
 });
 

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeCurrencies } from '../reducers/currenciesReducer';
 import { validateTextInput } from '../utils/inputUtils';
-import { addProfile } from '../reducers/profilesReducer';
+import { editProfile } from '../reducers/profilesReducer';
 import { createAlert } from '../reducers/alertReducer';
 import { ERROR } from '../utils/constants';
 
@@ -26,7 +26,7 @@ const style = {
     p: 4,
 };
 
-const CreateProfile = ({ isOpen, toggleModal }) => {
+const UpdateProfile = ({ isOpen, toggleModal, profile }) => {
     const dispatch = useDispatch();
     const currencies = useSelector(state => state.currencies);
 
@@ -34,10 +34,13 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
         e.preventDefault();
 
         const name = validateTextInput(dispatch, e.target.name.value);
-        const description = validateTextInput(
-            dispatch,
-            e.target.description.value
-        );
+
+        let description = null;
+
+        if (e.target.description.value) {
+            description = e.target.description.value.trim();
+        }
+
         const currency = validateTextInput(dispatch, e.target.currency.value);
 
         const currencyObjects = Object.values(currencies).filter(
@@ -47,8 +50,29 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
             currencyObjects.length > 0 ? currencyObjects[0].code : undefined;
 
         if (name && currencyCode) {
-            dispatch(addProfile({ name, description, currency: currencyCode }));
-            toggleModal();
+            if (
+                profile.name === name &&
+                profile.description === description &&
+                profile.currency.code === currencyCode
+            ) {
+                dispatch(
+                    createAlert(
+                        'Profile data must be different than current',
+                        ERROR,
+                        3
+                    )
+                );
+            } else {
+                let updatedProfile = {
+                    id: profile.id,
+                    name,
+                    description,
+                    currency: currencyCode,
+                };
+
+                dispatch(editProfile(updatedProfile));
+                toggleModal();
+            }
         } else {
             dispatch(createAlert('Check your inputs', ERROR, 3));
         }
@@ -65,7 +89,7 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
             <Modal open={isOpen} onClose={toggleModal}>
                 <Box sx={style}>
                     <Typography variant="h4" component="h3">
-                        New profile
+                        Edit profile
                     </Typography>
                     <form onSubmit={handleSubmit}>
                         <div>
@@ -133,4 +157,4 @@ const CreateProfile = ({ isOpen, toggleModal }) => {
     );
 };
 
-export default CreateProfile;
+export default UpdateProfile;

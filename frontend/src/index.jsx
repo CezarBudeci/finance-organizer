@@ -11,14 +11,18 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import store from './store/store';
 import { ThemeProvider } from '@mui/material';
 import theme from './theme/theme';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Provider store={store}>
-        <Router>
-            <ThemeProvider theme={theme}>
-                <App />
-            </ThemeProvider>
-        </Router>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Router>
+                <ThemeProvider theme={theme}>
+                    <App />
+                </ThemeProvider>
+            </Router>
+        </LocalizationProvider>
     </Provider>
 );

@@ -4,6 +4,7 @@ export const UNAUTHORIZED_ERROR = 'UnauthorizedError';
 export const FORBIDDEN_ERROR = 'ForbiddenError';
 export const CAST_ERROR = 'CastError';
 export const INTERNAL_SERVER_ERROR = 'InternalServerError';
+export const NOT_FOUND_ERROR = 'NotFoundError';
 
 export const throwInvalidArgumentError = message => {
     throwError(INVALID_ARGUMENT_ERROR, message);
@@ -19,6 +20,10 @@ export const throwUnauthorizedError = message => {
 
 export const throwInternalServerError = message => {
     throwError(INTERNAL_SERVER_ERROR, message);
+};
+
+export const throwNotFoundError = message => {
+    throwError(NOT_FOUND_ERROR, message);
 };
 
 export const getError = (type, message) => {

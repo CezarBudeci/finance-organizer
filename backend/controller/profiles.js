@@ -9,14 +9,15 @@ profileRouter.get('/', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    ProfileService.getProfiles(req.user).then(result => {
-        res.json(result);
-        return;
-    });
-    // .catch(err => next(err));
+    ProfileService.getProfiles(req.user)
+        .then(result => {
+            res.json(result);
+            return;
+        })
+        .catch(err => next(err));
 });
 
-profileRouter.get('/:id', (req, res) => {
+profileRouter.get('/:id', (req, res, next) => {
     const id = req.params.id;
     if (!id) {
         throwInvalidArgumentError('Invalid id');
@@ -26,7 +27,7 @@ profileRouter.get('/:id', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    ProfileService.getProfile(id, _, req.user)
+    ProfileService.getProfile(id, undefined, req.user)
         .then(result => {
             res.json(result);
             return;
@@ -54,7 +55,7 @@ profileRouter.post('/', (req, res, next) => {
         .catch(err => next(err));
 });
 
-profileRouter.put('/:id', (req, res) => {
+profileRouter.put('/:id', (req, res, next) => {
     const id = req.params.id;
     if (!id) {
         throwInvalidArgumentError('Invalid id');
@@ -64,14 +65,8 @@ profileRouter.put('/:id', (req, res) => {
         throwInvalidArgumentError('Invalid user');
     }
 
-    const profile = req.body.profile;
-    if (
-        !profile ||
-        !profile.name ||
-        !profile.currency ||
-        !profile.expenses ||
-        profile.expenses.length !== 1
-    ) {
+    const profile = req.body;
+    if (!profile || !profile.name || !profile.currency) {
         throwInvalidArgumentError('Invalid profile data');
     }
 
@@ -80,7 +75,6 @@ profileRouter.put('/:id', (req, res) => {
         profile.name,
         profile.description,
         profile.currency,
-        profile.expenses[0],
         req.user
     )
         .then(result => {
@@ -90,7 +84,7 @@ profileRouter.put('/:id', (req, res) => {
         .catch(err => next(err));
 });
 
-profileRouter.delete('/:id', (req, res) => {
+profileRouter.delete('/:id', (req, res, next) => {
     const id = req.params.id;
     if (!id) {
         throwInvalidArgumentError('Invalid id');

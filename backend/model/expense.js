@@ -5,14 +5,10 @@ const expenseSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    type: {
+    category: {
         type: String,
         required: true,
-    },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        retuired: true,
+        minLength: 3,
     },
     description: {
         type: String,

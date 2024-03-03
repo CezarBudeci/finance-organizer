@@ -10,11 +10,11 @@ export const authenticate = (req, _, next) => {
     const { authorization } = req.headers;
 
     if (!authorization || !authorization.startsWith('Bearer ')) {
-        throwUnauthorizedError();
+        throwUnauthorizedError('Not authorized');
     }
 
     if (!auth || !auth.currentUser) {
-        throwUnauthorizedError();
+        throwUnauthorizedError('Not authorized');
     }
 
     const authorizationToken = authorization.split('Bearer ')[1];
@@ -23,7 +23,7 @@ export const authenticate = (req, _, next) => {
         .getIdTokenResult(false)
         .then(result => {
             if (!result && !result.token) {
-                throwUnauthorizedError();
+                throwUnauthorizedError('Not authorized');
             }
             if (result.token !== authorizationToken) {
                 throwForbiddenError();
@@ -56,6 +56,9 @@ export const errorHandler = (err, _, res, next) => {
             return;
         case 'ForbiddenError':
             res.status(403).send(errorMessage);
+            return;
+        case 'NotFoundError':
+            res.status(404).send(errorMessage);
             return;
         case 'SyntaxError':
         case 'ReferenceError':

@@ -2,6 +2,7 @@ import axios from 'axios';
 import AuthenticationService from './authenticationService';
 
 const profilesPath = '/api/profiles';
+const expensesPath = '/api/expenses';
 
 const getProfiles = () => {
     return axios
@@ -35,6 +36,30 @@ const editProfile = profile => {
         .then(res => res.data);
 };
 
+const addExpense = (profileId, expense) => {
+    return axios
+        .post(`${expensesPath}/profiles/${profileId}`, expense, {
+            headers: { Authorization: AuthenticationService.getToken() },
+        })
+        .then(res => res.data);
+};
+
+const editExpense = (profileId, expense) => {
+    return axios
+        .put(`${expensesPath}/${expense.id}/profiles/${profileId}`, expense, {
+            headers: { Authorization: AuthenticationService.getToken() },
+        })
+        .then(res => res.data);
+};
+
+const deleteExpense = (profileId, expenseId) => {
+    return axios
+        .delete(`${expensesPath}/${expenseId}/profiles/${profileId}`, {
+            headers: { Authorization: AuthenticationService.getToken() },
+        })
+        .then(res => res.data);
+};
+
 const deleteProfile = id => {
     return axios
         .delete(`${profilesPath}/${id}`, {
@@ -48,6 +73,9 @@ const ProfileService = {
     getProfiles,
     addProfile,
     editProfile,
+    addExpense,
+    editExpense,
+    deleteExpense,
     deleteProfile,
 };
 
