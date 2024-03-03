@@ -14,19 +14,7 @@ import dayjs from 'dayjs';
 import { addExpense } from '../reducers/profilesReducer';
 import { validateNumberInput } from '../utils/inputUtils';
 import { createAlert } from '../reducers/alertReducer';
-import { ERROR } from '../utils/constants';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
+import { ERROR, modalStyle } from '../utils/constants';
 
 const CreateExpense = ({ profileId, isOpen, toggleModal }) => {
     const dispatch = useDispatch();
@@ -73,81 +61,87 @@ const CreateExpense = ({ profileId, isOpen, toggleModal }) => {
     return (
         <div>
             <Modal open={isOpen} onClose={toggleModal}>
-                <Box sx={style}>
-                    <Typography variant="h4" component="h3">
-                        New expense
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <div>
+                <Box sx={modalStyle}>
+                    <div className="modal-content-wrapper">
+                        <Typography variant="h4" component="h3">
+                            New expense
+                        </Typography>
+                        <form
+                            className="modal-form-content-wrapper"
+                            onSubmit={handleSubmit}>
                             <div>
-                                <TextField
-                                    label="Amount"
-                                    variant="standard"
-                                    color="secondary"
-                                    name="amount"
-                                    type="number"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <Autocomplete
-                                    disablePortal
-                                    options={categories}
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            label="Category *"
-                                            variant="standard"
-                                            name="category"
-                                        />
-                                    )}
-                                    getOptionLabel={option => option}
-                                    renderOption={(props, option) => (
-                                        <Typography
-                                            variant="standard"
-                                            {...props}>
-                                            {option}
-                                        </Typography>
-                                    )}
-                                />
-                            </div>
-                            <div>
-                                <TextField
-                                    label="Description"
-                                    variant="standard"
-                                    color="secondary"
-                                    type="description"
-                                    name="description"
-                                />
-                            </div>
-                            <div>
-                                <DatePicker
-                                    name="date"
-                                    label="Date *"
-                                    defaultValue={dayjs(new Date())}
-                                />
-                            </div>
+                                <div className="modal-form-input-wrapper">
+                                    <TextField
+                                        label="Amount"
+                                        variant="standard"
+                                        color="secondary"
+                                        name="amount"
+                                        type="number"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Autocomplete
+                                        disablePortal
+                                        options={categories}
+                                        renderInput={params => (
+                                            <TextField
+                                                {...params}
+                                                label="Category *"
+                                                variant="standard"
+                                                name="category"
+                                            />
+                                        )}
+                                        getOptionLabel={option => option}
+                                        renderOption={(props, option) => (
+                                            <Typography
+                                                variant="standard"
+                                                {...props}>
+                                                {option}
+                                            </Typography>
+                                        )}
+                                    />
+                                </div>
+                                <div className="modal-form-input-wrapper">
+                                    <TextField
+                                        label="Description"
+                                        variant="standard"
+                                        color="secondary"
+                                        type="description"
+                                        name="description"
+                                    />
+                                </div>
+                                <div className="modal-form-datepicker-wrapper">
+                                    <DatePicker
+                                        name="date"
+                                        label="Date *"
+                                        defaultValue={dayjs(new Date())}
+                                    />
+                                </div>
 
-                            <div>
-                                <div>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={toggleModal}>
-                                        close
-                                    </Button>
-                                </div>
-                                <div>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        type="submit">
-                                        save
-                                    </Button>
+                                <div className="modal-form-buttons-wrapper">
+                                    <div>
+                                        <Button
+                                            className="cancel-button"
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={toggleModal}>
+                                            close
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <Button
+                                            className="general-button"
+                                            variant="outlined"
+                                            color="primary"
+                                            type="submit">
+                                            save
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </Box>
             </Modal>
         </div>

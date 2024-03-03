@@ -1,0 +1,37 @@
+.general-button {
+    color: var(--orange) !important;
+}
+
+.general-button:hover,
+.general-button:active {
+    color: var(--main) !important;
+    border-color: var(--orange) !important;
+    background-color: var(--opaqueOrange) !important;
+}
+
+.cancel-button {
+    color: var(--red) !important;
+}
+
+.cancel-button:hover,
+.cancel-button:active {
+    color: var(--main) !important;
+    border-color: var(--red) !important;
+    background-color: var(--opaqueRed) !important;
+}
+
+a:hover {
+    color: var(--orange);
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+a,
+a:link,
+a:visited,
+a:active,
+a:hover {
+    text-decoration: none !important;
+}

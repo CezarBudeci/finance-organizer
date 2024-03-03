@@ -1,0 +1,24 @@
+.modal-content-wrapper,
+.modal-form-content-wrapper,
+.modal-form-input-wrapper,
+.modal-form-datepicker-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    gap: 10px
+}
+
+.modal-form-datepicker-wrapper {
+    margin-top: 10px;
+}
+
+.modal-form-buttons-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 10px;
+    justify-content: space-between;
+}

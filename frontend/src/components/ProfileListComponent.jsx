@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { populateProfileCurrency } from '../reducers/currenciesReducer';
+import { getBalanceColor } from '../utils/styleUtils';
 
 const ProfileListComponent = ({ profile }) => {
     const navigate = useNavigate();
@@ -19,17 +20,24 @@ const ProfileListComponent = ({ profile }) => {
             dispatch(populateProfileCurrency(profile.currency, profile.id));
         }
     }, [profile.currency]);
+
     return (
-        <div>
+        <div className="profile-list-item">
             <Card variant="outlined">
                 <CardActionArea
                     onClick={() => navigate(`/profiles/${profile.id}`)}>
                     <CardHeader title={profile.name} />
 
-                    <CardContent>
-                        <Typography>{profile.description}</Typography>
-                        <Typography>{profile.balance}</Typography>
-                        <Typography>{profile.currency.symbol}</Typography>
+                    <CardContent className="profile-card-content-wrapper">
+                        <div className="profile-card-content">
+                            <Typography>{profile.description}</Typography>
+                            <Typography>
+                                <span style={getBalanceColor(profile.balance)}>
+                                    {profile.balance}
+                                </span>{' '}
+                                <span>{profile.currency.symbol}</span>
+                            </Typography>
+                        </div>
                     </CardContent>
                 </CardActionArea>
             </Card>

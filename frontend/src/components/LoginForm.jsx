@@ -21,7 +21,7 @@ const LoginForm = () => {
         <div className="login-form-container">
             <form className="login-form" onSubmit={handleSubmit}>
                 <Typography variant="h4">Login</Typography>
-                <div>
+                <div className="login-form-compoenents-wrappers">
                     <div>
                         <TextField
                             label="E-mail"
@@ -42,6 +42,7 @@ const LoginForm = () => {
                     </div>
                     <div>
                         <Button
+                            className="general-button"
                             variant="outlined"
                             color="primary"
                             type="submit">

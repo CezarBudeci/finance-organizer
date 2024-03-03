@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { lightGreen } from '@mui/material/colors';
+import { orange } from '@mui/material/colors';
 
 const theme = createTheme({
     palette: {
@@ -8,7 +8,7 @@ const theme = createTheme({
         },
 
         secondary: {
-            main: lightGreen.A400,
+            main: orange.A700,
         },
     },
     typography: {

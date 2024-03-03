@@ -12,14 +12,16 @@ const Expenses = ({ profileId, expenses }) => {
     };
 
     return (
-        <div>
-            <Typography>Expenses</Typography>
-            <Tooltip title="Add Expense">
-                <IconButton aria-label="Add expense" onClick={toggleModal}>
-                    <AddCircleOutlineIcon />
-                </IconButton>
-            </Tooltip>
-            <div>
+        <div className="expenses-wrapper">
+            <div className="expenses-header">
+                <Typography variant="h5">Expenses</Typography>
+                <Tooltip title="Add Expense">
+                    <IconButton aria-label="Add expense" onClick={toggleModal}>
+                        <AddCircleOutlineIcon />
+                    </IconButton>
+                </Tooltip>
+            </div>
+            <div className="expenses-list-wrapper">
                 {expenses &&
                     expenses.map(expense => (
                         <Expense

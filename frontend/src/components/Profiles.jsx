@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileListComponent from './ProfileListComponent';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip, Typography } from '@mui/material';
 import CreateProfile from './CreateProfile';
 import { toggleAddProfileModalIsOpen } from '../reducers/modalsReducer';
 import { useEffect } from 'react';
@@ -21,19 +21,30 @@ const Profiles = () => {
     useEffect(() => {
         dispatch(initializeProfiles());
     }, []);
+
     return (
-        <div>
-            <IconButton aria-label="Add profile" onClick={toggleModal}>
-                <AddCircleOutlineIcon />
-            </IconButton>
+        <div className="profiles-wrapper">
+            <div className="profiles-header">
+                <Typography variant="h4">Profiles</Typography>
+                <Tooltip title="Add profile">
+                    <IconButton aria-label="Add profile" onClick={toggleModal}>
+                        <AddCircleOutlineIcon />
+                    </IconButton>
+                </Tooltip>
+            </div>
             <CreateProfile
                 isOpen={addProfileModalIsOpen}
                 toggleModal={toggleModal}
             />
-            {profiles &&
-                profiles.map(profile => (
-                    <ProfileListComponent key={profile.id} profile={profile} />
-                ))}
+            <div className="profiles-list-wrapper">
+                {profiles &&
+                    profiles.map(profile => (
+                        <ProfileListComponent
+                            key={profile.id}
+                            profile={profile}
+                        />
+                    ))}
+            </div>
         </div>
     );
 };

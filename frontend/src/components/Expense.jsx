@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeExpense } from '../reducers/profilesReducer';
 import { toggleEditExpenseModalIsOpen } from '../reducers/modalsReducer';
 import UpdateExpense from './UpdateExpense';
+import { getBalanceColor, getBorderColor } from '../utils/styleUtils';
 
 const Expense = ({ profileId, expense }) => {
     const dispatch = useDispatch();
@@ -27,27 +28,53 @@ const Expense = ({ profileId, expense }) => {
         return new Date(date).toLocaleDateString(navigator.language);
     };
     return (
-        <div>
-            <Typography>{expense.amount}</Typography>
-            <Typography>{expense.category}</Typography>
-            <Typography>{expense.description}</Typography>
-            <Typography>{formatDate(expense.date)}</Typography>
-            <Tooltip title="Edit expense">
-                <IconButton aria-label="Edit expense" onClick={handleEdit}>
-                    <EditOutlinedIcon />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete expense">
-                <IconButton aria-label="Delete expense" onClick={handleDelete}>
-                    <DeleteOutlineOutlinedIcon />
-                </IconButton>
-            </Tooltip>
-            <UpdateExpense
-                profileId={profileId}
-                isOpen={editExpenseModalIsOpen}
-                toggleModal={toggleEditModal}
-                expense={expense}
-            />
+        <div className="expense-wrapper">
+            <div
+                className="expense-components-wrapper"
+                style={getBorderColor(expense.amount)}>
+                <div className="expense-components-title">
+                    <Typography
+                        style={getBalanceColor(expense.amount)}
+                        variant="h6">
+                        {expense.amount}
+                    </Typography>
+                </div>
+                <div className="expense-component-content-wrapper">
+                    <div className="expense-component-nested-content-wrapper">
+                        <Typography>Category: {expense.category}</Typography>
+                        <Typography>
+                            Date: {formatDate(expense.date)}
+                        </Typography>
+                    </div>
+                    <div>
+                        <Typography>
+                            Description: {expense.description}
+                        </Typography>
+                    </div>
+                </div>
+                <div>
+                    <Tooltip title="Edit expense">
+                        <IconButton
+                            aria-label="Edit expense"
+                            onClick={handleEdit}>
+                            <EditOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete expense">
+                        <IconButton
+                            aria-label="Delete expense"
+                            onClick={handleDelete}>
+                            <DeleteOutlineOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+                <UpdateExpense
+                    profileId={profileId}
+                    isOpen={editExpenseModalIsOpen}
+                    toggleModal={toggleEditModal}
+                    expense={expense}
+                />
+            </div>
         </div>
     );
 };

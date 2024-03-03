@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, Link, TextField, Typography } from '@mui/material';
 import { validateTextInput } from '../utils/inputUtils';
 import { useDispatch } from 'react-redux';
 import { createAlert } from '../reducers/alertReducer';
@@ -29,8 +29,8 @@ const RegistrationForm = () => {
     return (
         <div className="login-form-container">
             <form className="login-form" onSubmit={handleSubmit}>
-                <Typography variant="h4">Login</Typography>
-                <div>
+                <Typography variant="h4">Register</Typography>
+                <div className="login-form-compoenents-wrappers">
                     <div>
                         <TextField
                             label="E-mail"
@@ -69,11 +69,17 @@ const RegistrationForm = () => {
                     </div>
                     <div>
                         <Button
+                            className="general-button"
                             variant="outlined"
                             color="primary"
                             type="submit">
                             Register
                         </Button>
+                    </div>
+                    <div>
+                        <Typography>
+                            Return to login page: <Link href="/">Login</Link>
+                        </Typography>
                     </div>
                 </div>
             </form>

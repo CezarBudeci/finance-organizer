@@ -36,6 +36,5 @@ function App() {
         </div>
     );
 }
-// TODO: create theme with mui
 
 export default App;

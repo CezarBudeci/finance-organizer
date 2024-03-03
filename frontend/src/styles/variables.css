@@ -1,0 +1,7 @@
+:root {
+    --main: #000000;
+    --orange: #ff6d00;
+    --opaqueOrange: rgba(255, 109, 0, 0.04);
+    --red: red;
+    --opaqueRed: rgba(255, 0, 0, 0.04);
+}

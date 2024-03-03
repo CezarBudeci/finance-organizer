@@ -1,0 +1,92 @@
+.profiles-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-self: center;
+}
+
+.profiles-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-self: center;
+    justify-content: center;
+    margin: 15px;
+}
+
+.profiles-header > h4,
+.profiles-header > button {
+    display: flex;
+    width: fit-content;
+    align-self: center;
+}
+
+.profiles-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.profile-list-item {
+    width: 70%;
+    text-align: center;
+}
+
+.profile-card-content-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0px !important;
+    margin: auto;
+}
+
+.profile-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    padding: 16px;
+}
+
+.profile-component-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.profile-component-details-wrapper {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--main);
+    border-radius: 10px;
+}
+
+.profile-component-details-nested-wrapper {
+    width: 100%;
+    margin: 10px;
+    display: inherit;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-component-details-title-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.profile-component-details-info-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px
+}
