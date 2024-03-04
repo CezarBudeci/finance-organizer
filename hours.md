@@ -1,20 +1,4 @@
-# Financy
-
-Project for Full Stack open course.
-
-### Project link
-
-[Financy](http://ghostysserver.ddns.net)
-
-### Project description
-
-A finance organizer where users can keep track of their finances for different purposes. Users can register, create profiles and expenses/incomings, as well as modify/delete them.
-
-Backend uses NodeJS with express library. Frontend is a React app using MUI library for predefined components and Redux for state management. MongoDB was selected as the database. User management was implemented with Firebase Authentication with traffic through backend. Project is served from my own linux server.
-
-### Hour input
-
-Hour inputs is duplicated here. Can also be found [here](https://github.com/CezarBudeci/finance-organizer/blob/main/hours.md)
+# Hour input
 
 | Date      | Hours |                                                   Task |
 | --------- | :---: | -----------------------------------------------------: |
